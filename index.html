@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gra Terenowa RAZEM - Park Pszczyna</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        h1, h2 { font-family: 'Playfair Display', serif; }
+        .bg-garden {
+            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('assets/hero-bg.jpg');
+            background-size: cover;
+            background-position: center;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+    <header class="bg-garden h-screen flex flex-col items-center justify-center text-center text-white px-4">
+        <h1 class="text-5xl md:text-7xl mb-4 italic">Gra Terenowa: RAZEM</h1>
+        <p class="text-xl md:text-2xl max-w-2xl font-light">Przywróć barwy Pierwszemu Ogrodowi. Wyzwanie, które ukończymy tylko wspólnie.</p>
+        <div class="mt-10 flex flex-col md:flex-row gap-4">
+            <a href="#zapisy" class="bg-emerald-600 hover:bg-emerald-700 text-white px-8 py-3 rounded-full text-lg font-bold transition">Zapisz się</a>
+            <a href="#zasady" class="bg-white/20 hover:bg-white/30 backdrop-blur-md text-white px-8 py-3 rounded-full text-lg transition">Poznaj historię</a>
+        </div>
+    </header>
+
+    <section id="zasady" class="py-20 px-4 max-w-4xl mx-auto text-center">
+        <h2 class="text-4xl mb-8 text-emerald-900">Legenda Pierwszego Ogrodu</h2>
+        <div class="space-y-6 text-lg leading-relaxed text-gray-600">
+            <p>Dawno temu istniało miejsce, gdzie wszystko było w idealnej równowadze. Wszystkie stworzenia i ludzie żyli w pełnej jedności – rozumieli się bez słów, a świat wokół nich mienił się kolorami, których dziś nie potrafimy nawet nazwać.</p>
+            <p class="italic text-emerald-700">"Jednak pewnego dnia, przez pychę i chęć bycia ważniejszymi od innych, ludzie zaczęli budować mury..."</p>
+            <p>Harmonia zniknęła, a ogród stał się bezbarwny. Dziś odnaleźliśmy mapę, która prowadzi do utraconych barw. Czy odważysz się je odzyskać?</p>
+        </div>
+    </section>
+
+    <section class="bg-emerald-900 py-20 text-white">
+        <div class="max-w-6xl mx-auto px-4 grid md:grid-cols-3 gap-12 text-center">
+            <div>
+                <div class="text-4xl mb-4">🤝</div>
+                <h3 class="text-xl font-bold mb-2">Współpraca</h3>
+                <p class="text-emerald-100">Tu nie ma rywalizacji. Wygrywacie tylko wtedy, gdy działacie jako jedna drużyna.</p>
+            </div>
+            <div>
+                <div class="text-4xl mb-4">🎨</div>
+                <h3 class="text-xl font-bold mb-2">Pięć Barw</h3>
+                <p class="text-emerald-100">Odwiedź 5 stacji: od Echa Prawdy po Źródło Życia, by zebrać niezbędne kolory.</p>
+            </div>
+            <div>
+                <div class="text-4xl mb-4">🌳</div>
+                <h3 class="text-xl font-bold mb-2">Park Pszczyna</h3>
+                <p class="text-emerald-100">Odkryj uroki pszczyńskiego parku w zupełnie nowej, fabularnej odsłonie.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="mapa" class="py-20 px-4 max-w-5xl mx-auto">
+        <h2 class="text-4xl mb-10 text-center text-emerald-900">Mapa Przygody</h2>
+        <div class="bg-gray-200 rounded-2xl overflow-hidden shadow-xl aspect-video flex items-center justify-center relative">
+            <div class="text-center p-6">
+                <p class="text-gray-500 mb-4 italic">Interaktywna mapa Google Earth zostanie odblokowana wkrótce.</p>
+                <img src="assets/placeholder-mapa.jpg" alt="Podgląd mapy" class="opacity-30 mx-auto max-w-xs">
+            </div>
+        </div>
+    </section>
+
+    <section id="zapisy" class="py-20 bg-white shadow-inner">
+        <div class="max-w-3xl mx-auto px-4 text-center">
+            <h2 class="text-4xl mb-6 text-emerald-900">Dołącz do Zjazdu</h2>
+            <p class="mb-10 text-gray-600 font-medium">Zarejestruj swoją grupę lub rodzinę przez poniższy formularz, abyśmy mogli przygotować dla Was zestaw materiałów.</p>
+            
+            <a href="https://forms.google.com/TWOJ-LINK" target="_blank" class="inline-block bg-emerald-600 hover:bg-emerald-700 text-white text-xl px-12 py-5 rounded-xl shadow-lg transition transform hover:-translate-y-1">
+                Otwórz Formularz Rejestracji
+            </a>
+            
+            <p class="mt-6 text-sm text-gray-400 italic">Rejestracja jest darmowa i niezbędna do udziału w zadaniu finałowym.</p>
+        </div>
+    </section>
+
+    <footer class="py-10 text-center border-t border-gray-200">
+        <p class="text-gray-400">Gra Terenowa "RAZEM" &copy; 2026 | Projekt zrealizowany w Parku w Pszczynie</p>
+    </footer>
+
+</body>
+</html>
