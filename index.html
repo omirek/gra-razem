@@ -7,11 +7,10 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
-   <style>
+  <style>
         body { font-family: 'Inter', sans-serif; }
-        h1, h2 { font-family: 'Playfair Display', serif; }
+        h2, h3 { font-family: 'Playfair Display', serif; }
         .bg-garden {
-            /* Usunęliśmy ciemny gradient na całości, grafika ma teraz naturalne, jasne kolory */
             background: url('./assets/hero-bg.jpg');
             background-size: cover;
             background-position: center;
@@ -20,23 +19,20 @@
 </head>
 <body class="bg-gray-50 text-gray-800">
 
-    <header class="bg-garden h-screen flex flex-col justify-end items-center text-center px-4 pb-12 md:pb-20">
+    <header class="bg-garden h-screen flex flex-col justify-end items-center px-4 pb-16">
         
         <h1 class="sr-only">PIERWSZY OGRÓD - gra terenowa</h1>
         
-        <div class="bg-emerald-950/80 backdrop-blur-md p-6 md:p-8 rounded-3xl max-w-3xl border border-white/10 shadow-2xl text-white">
-            <p class="text-lg md:text-2xl font-light mb-6">
-                Przywróć barwy Pierwszemu Ogrodowi. <br class="hidden md:inline">Wyzwanie, które ukończymy tylko wspólnie.
-            </p>
+        <div class="flex flex-col sm:flex-row gap-4 w-full max-w-md sm:max-w-none justify-center bg-white/10 backdrop-blur-xl p-4 rounded-3xl border border-white/20 shadow-lg">
             
-            <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                <a href="#zapisy" class="bg-emerald-600 hover:bg-emerald-700 text-white px-8 py-3 rounded-full text-lg font-bold transition shadow-lg shadow-emerald-900/40">
-                    Zapisz się
-                </a>
-                <a href="#zasady" class="bg-white/10 hover:bg-white/20 border border-white/20 text-white px-8 py-3 rounded-full text-lg transition">
-                    Poznaj historię
-                </a>
-            </div>
+            <a href="#zapisy" class="bg-emerald-600 hover:bg-emerald-700 text-white px-8 py-3.5 rounded-full text-lg font-bold text-center transition shadow-md shadow-emerald-900/20 whitespace-nowrap">
+                Zapisz się
+            </a>
+            
+            <a href="#zasady" class="bg-white/60 hover:bg-white/80 border border-gray-200/50 text-emerald-900 px-8 py-3.5 rounded-full text-lg font-medium text-center transition whitespace-nowrap">
+                Poznaj historię
+            </a>
+            
         </div>
 
     </header>
