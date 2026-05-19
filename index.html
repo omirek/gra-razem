@@ -25,85 +25,64 @@
         .text-poster-blue { color: #10557a; }
         .bg-poster-green { background-color: #89b443; }
         .bg-poster-green:hover { background-color: #769d37; }
-        .border-poster-blue { border-color: #10557a; }
 
-        /* Przyklejony nagłówek, który płynnie się zmniejsza */
-        .sticky-hero {
-            position: sticky;
-            top: 0;
-            z-index: 50;
-            width: 100%;
-            background: rgba(255, 255, 255, 0);
-            backdrop-filter: blur(0px);
-            transition: all 0.4s ease-in-out;
-            padding: 4rem 1rem 2rem 1rem;
+        /* Pełna sekcja startowa (Hero) */
+        .hero-section {
+            position: relative;
+            height: 75vh;
             display: flex;
             flex-direction: column;
+            justify-content: center;
             align-items: center;
+            padding: 2rem 1rem;
         }
 
-        /* Klasa dodawana przez JavaScript po przewinięciu strony */
-        .sticky-hero.scrolled {
-            background: rgba(253, 251, 247, 0.85); /* Kolor zbliżony do papieru */
-            backdrop-filter: blur(8px);
-            padding: 0.75rem 1rem;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
-            border-b: 1px solid rgba(16, 85, 122, 0.1);
-        }
-
-        /* Kontener spinający logo i kredki w nierozerwalną całość */
-        .hero-container {
+        /* Kontener trzymający kompozycję loga i kredek na starcie */
+        .logo-placement-container {
             position: relative;
             display: inline-flex;
             justify-content: center;
             align-items: center;
-            transition: transform 0.4s ease-in-out;
-        }
-
-        .sticky-hero.scrolled .hero-container {
-            transform: scale(0.45); /* Zmniejszenie całego zestawu na górze ekranu */
-        }
-
-        /* Główne logo */
-        .logo-img {
             width: 75vw;
-            max-width: 480px;
-            z-index: 10;
-            position: relative;
-            transition: width 0.4s;
+            max-width: 450px; /* Sztywny maksymalny wymiar loga */
         }
 
-        /* Kredki jako sztywna ramka wokół logo - skalują się proporcjonalnie na każdym ekranie */
-        .pencils-frame {
+        /* LOGO - bazowy styl i szerokość (100% kontenera) */
+        .logo-img {
+            width: 100%;
+            height: auto;
+            z-index: 10;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            transform-origin: center center;
+        }
+
+        /* EFEKT PŁYWANIA LOGO: Klasa aktywowana przez JS po przewinięciu */
+        .logo-img.floating {
+            position: fixed;
+            top: 1rem;
+            left: 50%;
+            transform: translateX(-50%) scale(0.45); /* Tylko czysty napis się zmniejsza */
+            z-index: 100;
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
+        }
+
+        /* KREDKI - Sztywna skala powiązana z logiem, a nie z szerokością ekranu */
+        .pencils-parallax-layer {
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 135%; /* Zawsze lekko większe od logo, tworząc ramkę */
-            max-width: 780px;
+            width: 140%; /* Zawsze o 40% szersze od loga, niezależnie od urządzenia */
+            max-width: 630px; /* Proporcjonalny max-width (450px * 1.4) */
             height: auto;
             object-fit: contain;
             pointer-events: none;
             z-index: 5;
             opacity: 0.95;
+            will-change: transform;
         }
 
-        /* Podpis pod logo - znika przy skrolowaniu, by zwolnić miejsce */
-        .hero-subtitle {
-            transition: all 0.3s ease-in-out;
-            opacity: 1;
-            transform: translateY(0);
-        }
-        .sticky-hero.scrolled .hero-subtitle {
-            opacity: 0;
-            height: 0;
-            margin: 0;
-            padding: 0;
-            transform: translateY(-10px);
-            pointer-events: none;
-        }
-
-        /* Półprzezroczyste wyspy tekstowe */
+        /* Styl dla wysp tekstowych */
         .paper-island {
             background-color: rgba(255, 255, 255, 0.75);
             backdrop-filter: blur(4px);
@@ -113,19 +92,22 @@
 </head>
 <body class="text-slate-800 selection:bg-yellow-200">
 
-    <header class="sticky-hero" id="hero-header">
-        <div class="hero-container">
-            <img src="./assets/pencils-layer.png" class="pencils-frame" alt="">
+    <header class="hero-section" id="hero-trigger">
+        
+        <div class="logo-placement-container">
             
-            <img src="./assets/logo-ogrod.png" alt="Pierwszy Ogród" class="logo-img">
+            <img src="./assets/pencils-layer.png" class="pencils-parallax-layer" id="pencils-layer" alt="">
+            
+            <img src="./assets/logo-ogrod.png" alt="Pierwszy Ogród" class="logo-img" id="main-logo">
+            
         </div>
         
-        <p class="hero-subtitle text-poster-blue text-xs md:text-base font-bold tracking-widest max-w-sm md:max-w-md mt-8 uppercase bg-white/40 backdrop-blur-sm px-6 py-2 rounded-full border border-white/20 shadow-sm text-center">
+        <p class="text-poster-blue text-xs md:text-base font-bold tracking-widest max-w-sm md:max-w-md mt-10 uppercase bg-white/40 backdrop-blur-sm px-6 py-2 rounded-full border border-white/20 shadow-sm text-center z-20">
             Gra terenowa w Parku Pszczyńskim
         </p>
     </header>
 
-    <div class="w-full max-w-xl mx-auto px-4 mb-16 relative z-20">
+    <div class="w-full max-w-xl mx-auto px-4 mb-20 relative z-20">
         <div class="flex flex-col sm:flex-row gap-4 justify-center">
             <a href="#zapisy" class="bg-poster-green text-white px-10 py-4 rounded-2xl text-lg font-bold text-center transition shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 whitespace-nowrap">
                 Zapisz się
@@ -138,13 +120,13 @@
 
     <main class="relative z-10 space-y-16 pb-24">
 
-        <section id="zasady" class="py-8 px-4 max-w-3xl mx-auto text-center scroll-mt-32">
+        <section id="zasady" class="py-8 px-4 max-w-3xl mx-auto text-center scroll-mt-24">
             <div class="paper-island p-8 md:p-12 rounded-3xl shadow-xl">
                 <h2 class="text-4xl mb-8 text-poster-blue font-black">Legenda Pierwszego Ogrodu</h2>
                 <div class="space-y-6 text-lg leading-relaxed text-slate-600">
-                    <p>Dawno temu istniało miejsce zwane Pierwszym Ogrodem, gdzie wszystko było w idealnej równowadze[cite: 217]. Wszystkie stworzenia i ludzie żyli w pełnej jedności – rozumieli się bez słów, a świat wokół nich mienił się kolorami, których dziś nie potrafimy nawet nazwać[cite: 218].</p>
-                    <p class="italic text-amber-600 font-semibold text-2xl my-6">"Jednak pewnego dnia, przez pychę i chęć bycia ważniejszymi od innych, ludzie zaczęli budować mury..." [cite: 219]</p>
-                    <p>Harmonii nie dało się utrzymać w izolacji – ogród zaczął tracić swoje barwy, aż stał się bezbarwny i podzielony na kawałki[cite: 220]. Dziś odnaleźliśmy mapę, która pokazuje, że Pierwszy Ogród wcale nie zniknął – on czeka na ponowne odkrycie[cite: 221]. Czy odważysz się przywrócić mu blask[cite: 223]?</p>
+                    <p>Dawno temu istniało miejsce zwane Pierwszym Ogrodem, gdzie wszystko było w idealnej równowadze. Wszystkie stworzenia i ludzie żyli w pełnej jedności – rozumieli się bez słów, a świat wokół nich mienił się kolorami, których dziś nie potrafimy nawet nazwać.</p>
+                    <p class="italic text-amber-600 font-semibold text-2xl my-6">"Jednak pewnego dnia, przez pychę i chęć bycia ważniejszymi od innych, ludzie zaczęli budować mury..."</p>
+                    <p>Harmonii nie dało się utrzymać w izolacji – ogród zaczął tracić swoje barwy, aż stał się bezbarwny i podzielony na kawałki. Dziś odnaleźliśmy mapę, która pokazuje, że Pierwszy Ogród wcale nie zniknął – on czeka na ponowne odkrycie. Czy odważysz się przywrócić mu blask?</p>
                 </div>
             </div>
         </section>
@@ -154,22 +136,22 @@
                 <div class="bg-sky-950/95 backdrop-blur-sm p-8 rounded-3xl border border-sky-900 shadow-2xl text-white">
                     <div class="text-4xl mb-4">🤝</div>
                     <h3 class="text-2xl font-bold mb-2 text-sky-300">Współpraca</h3>
-                    <p class="text-sky-100/80 text-sm leading-relaxed">Tu nie ma rywalizacji[cite: 227]. Wygrywacie tylko wtedy, gdy działacie jako jedna drużyna, łącząc siły ponad podziałami[cite: 214, 224].</p>
+                    <p class="text-sky-100/80 text-sm leading-relaxed">Tu nie ma rywalizacji. Wygrywacie tylko wtedy, gdy działacie jako jedna drużyna, łącząc siły ponad podziałami.</p>
                 </div>
                 <div class="bg-sky-950/95 backdrop-blur-sm p-8 rounded-3xl border border-sky-900 shadow-2xl text-white">
                     <div class="text-4xl mb-4">🎨</div>
                     <h3 class="text-2xl font-bold mb-2 text-emerald-300">Pięć Barw</h3>
-                    <p class="text-sky-100/80 text-sm leading-relaxed">Odwiedźcie 5 unikalnych stacji wyzwań, aby odzyskać i zabezpieczyć utracone kolory Ogrodu[cite: 223, 225].</p>
+                    <p class="text-sky-100/80 text-sm leading-relaxed">Odwiedźcie 5 unikalnych stacji wyzwań, aby odzyskać i zabezpieczyć utracone kolory Ogrodu.</p>
                 </div>
                 <div class="bg-sky-950/95 backdrop-blur-sm p-8 rounded-3xl border border-sky-900 shadow-2xl text-white">
                     <div class="text-4xl mb-4">🌳</div>
                     <h3 class="text-2xl font-bold mb-2 text-amber-300">Park Pszczyna</h3>
-                    <p class="text-sky-100/80 text-sm leading-relaxed">Odkryjcie malownicze zakątki pszczyńskiego parku w zupełnie nowej, pełnej przygód odsłonie[cite: 210].</p>
+                    <p class="text-sky-100/80 text-sm leading-relaxed">Odkryjcie malownicze zakątki pszczyńskiego parku w zupełnie nowej, pełnej przygód odsłonie.</p>
                 </div>
             </div>
         </section>
 
-        <section id="mapa" class="py-4 px-4 max-w-5xl mx-auto scroll-mt-32">
+        <section id="mapa" class="py-4 px-4 max-w-5xl mx-auto scroll-mt-24">
             <h2 class="text-4xl mb-8 text-center text-poster-blue font-bold">Mapa Przygody</h2>
             <a href="https://earth.google.com/earth/d/17ndx8o6jrH7QCP_shXRFDf9hst6TQpIM?usp=sharing" target="_blank" class="group block relative bg-white rounded-3xl overflow-hidden shadow-2xl aspect-video border-4 border-white transition-transform duration-300 hover:scale-[1.005]">
                 <img src="./assets/placeholder-mapa.jpg" alt="Mapa gry terenowej" class="absolute inset-0 w-full h-full object-cover transition-opacity duration-300 group-hover:opacity-90">
@@ -183,7 +165,7 @@
             </a>
         </section>
 
-        <section id="zapisy" class="py-4 px-4 max-w-3xl mx-auto text-center scroll-mt-32">
+        <section id="zapisy" class="py-4 px-4 max-w-3xl mx-auto text-center scroll-mt-24">
             <div class="paper-island p-8 md:p-12 rounded-3xl shadow-xl">
                 <h2 class="text-4xl mb-6 text-poster-blue font-bold">Dołącz do gry!</h2>
                 <p class="mb-10 text-slate-600 font-medium">Zarejestruj swoją grupę lub rodzinę przez poniższy formularz, abyśmy mogli przygotować dla Was zestaw materiałów turniejowych.</p>
@@ -216,15 +198,26 @@
     <script>
         lucide.createIcons();
 
-        // Skrypt nasłuchuje przewijania strony:
-        // Jeśli użytkownik zjedzie w dół o więcej niż 60px, dodaje klasę '.scrolled',
-        // która zmniejsza logo wraz z kredkami i blokuje je na górze ekranu w estetyczny sposób.
+        const logo = document.getElementById('main-logo');
+        const pencils = document.getElementById('pencils-layer');
+        const heroSection = document.getElementById('hero-trigger');
+
         window.addEventListener('scroll', function() {
-            const header = document.getElementById('hero-header');
-            if (window.scrollY > 60) {
-                header.classList.add('scrolled');
+            const scrollValue = window.scrollY;
+            
+            // 1. OBSŁUGA LOGO (Wskakiwanie w pozycję fixed bez ramki)
+            // Gdy użytkownik przewinie poza obszar strefy Hero
+            if (scrollValue > 100) {
+                logo.classList.add('floating');
             } else {
-                header.classList.remove('scrolled');
+                logo.classList.remove('floating');
+            }
+
+            // 2. OBSŁUGA PARALAKSY KREDEK
+            // Kredki zostają w nagłówku i przesuwają się o 25% prędkości scrolla,
+            // zachowując bazowe wyśrodkowanie z CSS
+            if (pencils) {
+                pencils.style.transform = `translate(-50%, calc(-50% + ${scrollValue * 0.25}px))`;
             }
         });
     </script>
