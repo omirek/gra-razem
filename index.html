@@ -102,6 +102,8 @@
             width: 38vw;
             max-width: 135px;
             animation: none;
+            /* DODAJEMY TO: Gwarantuje płynne przejście bez szarpnięć przy wyłączaniu animacji */
+            transition-property: all; 
         }
 
         @keyframes pulse-slow {
@@ -272,8 +274,9 @@
             }
 
             if (pencilsBg) {
-                pencilsBg.style.transform = `translateX(-50%) translateY(${scrollValue * 0.12}px)`;
-            }
+            // Dodajemy do pozycji Y stałą ujemną wartość (np. -40), aby podbić kredki do góry na starcie
+            pencilsBg.style.transform = `translateX(-50%) translateY(calc(-40px + ${scrollValue * 0.12}px))`;
+        }
         });
     </script>
 </body>
