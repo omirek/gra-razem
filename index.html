@@ -29,7 +29,7 @@
         /* KREDKI W TLE (Wychodzą poza ekran na mobile, większe na desktopie) */
         .pencils-bg-fixed {
             position: fixed;
-            top: 4vh;
+            top: -4vh;
             left: 50%;
             transform: translateX(-50%);
             width: 95vw;
@@ -71,9 +71,13 @@
         }
 
         .navigation-blur-bar.active {
-            height: 85px; 
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
+            height: 120px; /* Zwiększyłem delikatnie wysokość, żeby gradient miał przestrzeń na ładne wygaszanie */
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            
+            /* Maska: góra (czysty czarny = 100% widoczności bluru), dół (transparentny = 0% bluru) */
+            -webkit-mask-image: linear-gradient(to bottom, black 25%, transparent 100%);
+            mask-image: linear-gradient(to bottom, black 25%, transparent 100%);
         }
 
         /* LOGOTYP */
@@ -88,6 +92,7 @@
             z-index: 50;
             transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
             transform-origin: center center;
+            animation: pulse-slow 4s ease-in-out infinite;
         }
 
         /* Po przewinięciu: Płynne dopasowanie do paska z blurem */
@@ -96,6 +101,16 @@
             top: 15px;
             width: 38vw;
             max-width: 135px;
+            animation: none;
+        }
+
+        @keyframes pulse-slow {
+            0%, 100% {
+                transform: translateX(-50%) scale(1);
+            }
+            50% {
+                transform: translateX(-50%) scale(1.03); /* Zwiększenie o zaledwie 3% dla pełnej subtelności */
+            }
         }
 
         @media (min-width: 768px) {
