@@ -37,6 +37,7 @@
             min-width: 580px; 
             /* Na komputerach pozwalamy im rozwinąć skrzydła do 1400px */
             max-width: 1400px; 
+            margin-top: -60px;
             height: auto;
             object-fit: contain;
             pointer-events: none;
@@ -275,7 +276,7 @@
 
             if (pencilsBg) {
                 // JavaScript rusza z tej samej pozycji (-60px) i płynnie dodaje do niej wartość scrolla
-                pencilsBg.style.transform = `translateX(-50%) translateY(${-60 + scrollValue * 0.12}px)`;
+                pencilsBg.style.transform = `translateX(-50%);
             }
         });
     </script>
