@@ -29,7 +29,7 @@
         /* KREDKI W TLE (Wychodzą poza ekran na mobile, większe na desktopie) */
         .pencils-bg-fixed {
             position: fixed;
-            top: -40px;
+            top: 0;
             left: 50%;
             transform: translateX(-50%);
             width: 95vw;
@@ -274,9 +274,9 @@
             }
 
             if (pencilsBg) {
-            // Dodajemy do pozycji Y stałą ujemną wartość (np. -40), aby podbić kredki do góry na starcie
-            pencilsBg.style.transform = `translateX(-50%) translateY(calc(-40px + ${scrollValue * 0.12}px))`;
-        }
+                // JavaScript rusza z tej samej pozycji (-60px) i płynnie dodaje do niej wartość scrolla
+                pencilsBg.style.transform = `translateX(-50%) translateY(${-60 + scrollValue * 0.12}px)`;
+            }
         });
     </script>
 </body>
