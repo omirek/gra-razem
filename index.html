@@ -157,7 +157,7 @@
 
     <img src="./assets/logo-ogrod.png" id="main-logo" alt="Pierwszy Ogród" class="logo-layer">
 
-    <img src="./assets/pencils-layer.png" id="pencils-bg" class="pencils-bg-fixed" alt="">
+    <img src="./assets/pencils-layer.png" class="pencils-bg-fixed" alt="">
 
     <div class="hero-spacer">
         <p id="sub-title" class="hero-subtitle text-poster-blue text-xs md:text-base font-bold tracking-widest max-w-sm md:max-w-md uppercase bg-white/40 backdrop-blur-sm px-6 py-2 rounded-full border border-white/20 shadow-sm text-center relative z-20">
@@ -259,7 +259,6 @@
         const logo = document.getElementById('main-logo');
         const blurBar = document.getElementById('blur-bar');
         const subtitle = document.getElementById('sub-title');
-        const pencilsBg = document.getElementById('pencils-bg');
 
         window.addEventListener('scroll', function() {
             const scrollValue = window.scrollY;
@@ -272,11 +271,6 @@
                 logo.classList.remove('scrolled');
                 blurBar.classList.remove('active');
                 subtitle.classList.remove('hidden-sub');
-            }
-
-            if (pencilsBg) {
-                // JavaScript rusza z tej samej pozycji (-60px) i płynnie dodaje do niej wartość scrolla
-                pencilsBg.style.transform = `translateX(-50%)`;
             }
         });
     </script>
