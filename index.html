@@ -26,10 +26,10 @@
         .bg-poster-green { background-color: #89b443; }
         .bg-poster-green:hover { background-color: #769d37; }
 
-        /* KREDKI W TLE STRONY (pod wszystkimi elementami, z-index: 0) */
-        .pencils-bg-layer {
-            position: absolute;
-            top: 5%;
+        /* KREDKI STALE W TLE (Fixed + Parallax) */
+        .pencils-bg-fixed {
+            position: fixed;
+            top: 6%;
             left: 50%;
             transform: translateX(-50%);
             width: 95vw;
@@ -37,12 +37,12 @@
             height: auto;
             object-fit: contain;
             pointer-events: none;
-            z-index: 0; /* Całkowicie pod treścią */
+            z-index: 0; /* Pod całą treścią strony */
             opacity: 0.95;
             will-change: transform;
         }
 
-        /* Przestrzeń startowa dla dużego logo, żeby treść go nie zasłaniała */
+        /* Przestrzeń startowa dla zachowania proporcji plakatu na wejściu */
         .hero-spacer {
             height: 65vh;
             display: flex;
@@ -53,29 +53,28 @@
             pointer-events: none;
         }
 
-        /* GÓRNY PASEK Z BLUREM (Zablokowany na górze ekranu) */
+        /* DELIKATNY BLUR NA GÓRZE (Płynna poświata bez odcinającej się belki) */
         .navigation-blur-bar {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
-            height: 0; /* Startuje niewidoczny */
-            background: rgba(253, 251, 247, 0.6); /* Delikatny odcień papieru */
-            backdrop-filter: blur(12px); /* Twój ulubiony efekt rozmycia */
-            -webkit-backdrop-filter: blur(12px);
+            height: 0;
+            background: linear-gradient(to bottom, rgba(253, 251, 247, 0.4) 0%, rgba(253, 251, 247, 0) 100%);
+            backdrop-filter: blur(0px);
+            -webkit-backdrop-filter: blur(0px);
             z-index: 40;
             transition: all 0.4s ease-in-out;
-            border-b: 1px solid rgba(16, 85, 122, 0);
         }
 
-        /* Aktywacja bluru po przewinięciu strony */
+        /* Subtelna aktywacja rozmycia przy scrollu */
         .navigation-blur-bar.active {
-            height: 70px;
-            border-b: 1px solid rgba(16, 85, 122, 0.08);
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.02);
+            height: 85px; /* Delikatny gradient przechodzący w przezroczystość */
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
         }
 
-        /* GŁÓWNY LOGOTYP - Startuje wyśrodkowany w sekcji Hero */
+        /* LOGOTYP */
         .logo-layer {
             position: absolute;
             top: 20vh;
@@ -84,31 +83,31 @@
             width: 80vw;
             max-width: 500px;
             height: auto;
-            z-index: 50; /* Zawsze nad blurem i treścią */
+            z-index: 50; /* Zawsze nad tekstem i blurem */
             transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
             transform-origin: center center;
         }
 
-        /* PO PRZEWINIĘCIU: Logo wędruje na górę paska z blurem i maleje */
+        /* Po przewinięciu: Płynne dopasowanie do paska z blurem na górze */
         .logo-layer.scrolled {
             position: fixed;
-            top: 12px; /* Margines od góry paska */
-            width: 40vw;
-            max-width: 150px;
+            top: 15px;
+            width: 38vw;
+            max-width: 135px;
         }
 
-        /* Na komputerach przesuwamy małe logo do lewego górnego rogu, żeby nie zasłaniało środka ekranu */
+        /* Na desktopie ucieka do lewego rogu */
         @media (min-width: 768px) {
             .logo-layer.scrolled {
                 left: 5%;
-                transform: translateX(0) scale(1); /* Reset centrowania na desktopie */
+                transform: translateX(0);
             }
         }
-        /* Na komórkach zostaje wycentrowane, ale malutkie na pasku */
+        /* Na komórce zostaje małe na środku górnego bluru */
         @media (max-width: 767px) {
             .logo-layer.scrolled {
                 left: 50%;
-                transform: translateX(-50%) scale(1);
+                transform: translateX(-50%);
             }
         }
 
@@ -120,7 +119,7 @@
             pointer-events: none;
         }
 
-        /* Wyspy tekstowe (z-index: 10, by być NAD kredkami) */
+        /* Wyspy tekstowe na papierze (z-index: 10, by płynąć NAD kredkami) */
         .paper-island {
             position: relative;
             z-index: 10;
@@ -136,7 +135,7 @@
 
     <img src="./assets/logo-ogrod.png" id="main-logo" alt="Pierwszy Ogród" class="logo-layer">
 
-    <img src="./assets/pencils-layer.png" id="pencils-bg" class="pencils-bg-layer" alt="">
+    <img src="./assets/pencils-layer.png" id="pencils-bg" class="pencils-bg-fixed" alt="">
 
     <div class="hero-spacer">
         <p id="sub-title" class="hero-subtitle text-poster-blue text-xs md:text-base font-bold tracking-widest max-w-sm md:max-w-md uppercase bg-white/40 backdrop-blur-sm px-6 py-2 rounded-full border border-white/20 shadow-sm text-center relative z-20">
@@ -168,7 +167,7 @@
             </div>
         </section>
 
-        <section class="py-4 max-w-6xl mx-auto px-4 relative z-20">
+        <section class="py-4 max-w-6xl mx-auto px-4">
             <div class="grid md:grid-cols-3 gap-8 text-center">
                 <div class="bg-sky-950/95 backdrop-blur-sm p-8 rounded-3xl border border-sky-900 shadow-2xl text-white">
                     <div class="text-4xl mb-4">🤝</div>
@@ -243,8 +242,8 @@
         window.addEventListener('scroll', function() {
             const scrollValue = window.scrollY;
             
-            // 1. Zmiana trybu logo i aktywacja paska z blurem (po przewinięciu o 120px)
-            if (scrollValue > 120) {
+            // 1. Przełączanie logo do trybu pływającego (po przewinięciu o 100px)
+            if (scrollValue > 100) {
                 logo.classList.add('scrolled');
                 blurBar.classList.add('active');
                 subtitle.classList.add('hidden-sub');
@@ -254,11 +253,10 @@
                 subtitle.classList.remove('hidden-sub');
             }
 
-            // 2. Paralaksa kredek w tle
-            // Kredki przesuwają się powoli w dół (współczynnik 0.2), 
-            // dzięki czemu tekst na wyspach przesuwa się nad nimi szybciej.
+            // 2. Efekt paralaksy dla kredek, które są stale obecne w tle (fixed)
+            // Kredki przesuwają się odrobinę wolniej niż przewijana treść, dając poczucie przestrzeni pod tekstem.
             if (pencilsBg) {
-                pencilsBg.style.transform = `translateX(-50%) translateY(${scrollValue * 0.2}px)`;
+                pencilsBg.style.transform = `translateX(-50%) translateY(${scrollValue * 0.12}px)`;
             }
         });
     </script>
