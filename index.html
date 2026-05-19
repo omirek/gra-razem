@@ -202,6 +202,78 @@
         a[download] i, a[download] svg {
             color: var(--color-blue) !important; /* Ikona pobierania w kolorze granatowej kredki */
         }
+
+        /* ==========================================================================
+           STYLIZACJA SEKCJI WPROWADZAJĄCEJ (LEGENDA I NIEZBĘDNIK)
+           ========================================================================== */
+
+        /* Kontener główny - na desktopie robi 2 równe kolumny, na mobile 1 */
+        .intro-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 24px;
+            width: 100%;
+            max-width: 1120px; /* Dopasowane do Twojej max-width: 5xl (ok. 1024px-1120px) */
+            margin: 0 auto;
+        }
+        
+        /* Wygląd pojedynczego kafelka (Wyspy) */
+        .intro-card {
+            background-color: rgba(255, 255, 255, 0.95); /* Białe, delikatnie półprzezroczyste tło */
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(153, 200, 219, 0.4); /* Subtelna ramka w kolorze jasnoniebieskiej kredki */
+            border-radius: 24px; /* Zaokrąglenia pasujące do reszty Twojej strony (rounded-3xl) */
+            padding: 32px; /* Przestrzeń wewnątrz kafelka */
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05); /* Miękki cień */
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* Nagłówki w kafelkach */
+        .intro-card h2 {
+            font-size: 1.875rem; /* Odpowiednik text-3xl z Tailwinda */
+            font-weight: 700;
+            color: var(--color-blue); /* Kolor granatowej kredki */
+            margin-bottom: 24px;
+        }
+        
+        /* Elementy listy w Niezbędniku Uczestnika */
+        .info-item {
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 1px dashed rgba(153, 200, 219, 0.3); /* Przerywana linia oddzielająca fakty */
+        }
+        
+        .info-item:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none; /* Usuwamy linię pod ostatnim elementem */
+        }
+        
+        /* Tytuły faktów (np. "Kiedy i gdzie:") */
+        .info-label {
+            display: block;
+            font-weight: 700;
+            color: var(--color-red); /* Kolor koralowej/czerwonej kredki dla wyróżnienia */
+            margin-bottom: 4px;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            tracking: 0.05em;
+        }
+        
+        /* Tekst wewnątrz faktów */
+        .info-item p {
+            color: #475569; /* Ładny szary kolor tekstu (slate-600) */
+            line-height: 1.6;
+            margin: 0;
+        }
+        
+        /* Magiczny moment: od szerokości ekranu komputera (768px) kafelki stają obok siebie i mają IDENTYCZNĄ wysokość */
+        @media (min-width: 768px) {
+            .intro-grid {
+                grid-template-columns: 1fr 1fr; /* Dwie równe kolumny */
+            }
+        }
     </style>
 </head>
 <body class="text-slate-800 selection:bg-yellow-200">
