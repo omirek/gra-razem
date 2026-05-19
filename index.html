@@ -8,7 +8,6 @@
     <script src="https://unpkg.com/lucide@latest"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
     <style>
-        /* Reset podstawowych marginesów, by uniknąć białych przerw */
         html, body {
             margin: 0;
             padding: 0;
@@ -23,40 +22,88 @@
         }
         h2, h3 { font-family: 'Playfair Display', serif; }
 
-        /* Klasy kolorystyczne z plakatu */
         .text-poster-blue { color: #10557a; }
         .bg-poster-green { background-color: #89b443; }
         .bg-poster-green:hover { background-color: #769d37; }
         .border-poster-blue { border-color: #10557a; }
 
-        /* Kredki na stałe przypięte w tle strony - dynamiczne skalowanie */
-        .pencils-background {
-            position: fixed;
+        /* Przyklejony nagłówek, który płynnie się zmniejsza */
+        .sticky-hero {
+            position: sticky;
             top: 0;
+            z-index: 50;
+            width: 100%;
+            background: rgba(255, 255, 255, 0);
+            backdrop-filter: blur(0px);
+            transition: all 0.4s ease-in-out;
+            padding: 4rem 1rem 2rem 1rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Klasa dodawana przez JavaScript po przewinięciu strony */
+        .sticky-hero.scrolled {
+            background: rgba(253, 251, 247, 0.85); /* Kolor zbliżony do papieru */
+            backdrop-filter: blur(8px);
+            padding: 0.75rem 1rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+            border-b: 1px solid rgba(16, 85, 122, 0.1);
+        }
+
+        /* Kontener spinający logo i kredki w nierozerwalną całość */
+        .hero-container {
+            position: relative;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            transition: transform 0.4s ease-in-out;
+        }
+
+        .sticky-hero.scrolled .hero-container {
+            transform: scale(0.45); /* Zmniejszenie całego zestawu na górze ekranu */
+        }
+
+        /* Główne logo */
+        .logo-img {
+            width: 75vw;
+            max-width: 480px;
+            z-index: 10;
+            position: relative;
+            transition: width 0.4s;
+        }
+
+        /* Kredki jako sztywna ramka wokół logo - skalują się proporcjonalnie na każdym ekranie */
+        .pencils-frame {
+            position: absolute;
+            top: 50%;
             left: 50%;
-            transform: translateX(-50%);
-            width: 100vw;
-            max-width: 1920px;
-            height: 100vh;
+            transform: translate(-50%, -50%);
+            width: 135%; /* Zawsze lekko większe od logo, tworząc ramkę */
+            max-width: 780px;
+            height: auto;
             object-fit: contain;
             pointer-events: none;
-            will-change: transform;
-            z-index: 0; /* Pod treścią, ale nad papierem */
+            z-index: 5;
             opacity: 0.95;
         }
 
-        /* Sekcja Hero bez sztywnego odcięcia na dole */
-        .hero-section {
-            position: relative;
-            height: 85vh; 
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 10;
+        /* Podpis pod logo - znika przy skrolowaniu, by zwolnić miejsce */
+        .hero-subtitle {
+            transition: all 0.3s ease-in-out;
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .sticky-hero.scrolled .hero-subtitle {
+            opacity: 0;
+            height: 0;
+            margin: 0;
+            padding: 0;
+            transform: translateY(-10px);
+            pointer-events: none;
         }
 
-        /* Półprzezroczyste wyspy tekstowe (papier prześwituje pod nimi) */
+        /* Półprzezroczyste wyspy tekstowe */
         .paper-island {
             background-color: rgba(255, 255, 255, 0.75);
             backdrop-filter: blur(4px);
@@ -66,63 +113,63 @@
 </head>
 <body class="text-slate-800 selection:bg-yellow-200">
 
-    <img src="./assets/pencils-layer.png" class="pencils-background" id="pencils" alt="">
-
-    <header class="hero-section" id="hero">
-        <div class="flex flex-col items-center justify-center text-center px-4">
-            <img src="./assets/logo-ogrod.png" alt="Pierwszy Ogród" class="w-[85vw] max-w-lg md:max-w-xl drop-shadow-sm">
+    <header class="sticky-hero" id="hero-header">
+        <div class="hero-container">
+            <img src="./assets/pencils-layer.png" class="pencils-frame" alt="">
             
-            <p class="text-poster-blue text-sm md:text-lg font-bold tracking-widest max-w-sm md:max-w-md mt-6 uppercase bg-white/40 backdrop-blur-sm px-6 py-2 rounded-full border border-white/20 shadow-sm">
-                Gra terenowa w Parku Pszczyńskim
-            </p>
+            <img src="./assets/logo-ogrod.png" alt="Pierwszy Ogród" class="logo-img">
         </div>
-
-        <div class="w-full max-w-xl px-4 mt-12">
-            <div class="flex flex-col sm:flex-row gap-4 justify-center bg-white/80 backdrop-blur-md p-4 rounded-3xl border border-white/50 shadow-xl">
-                <a href="#zapisy" class="bg-poster-green text-white px-8 py-3.5 rounded-2xl text-lg font-bold text-center transition shadow-md whitespace-nowrap">
-                    Zapisz się
-                </a>
-                <a href="#zasady" class="bg-sky-50/50 hover:bg-sky-100/80 border-2 border-sky-200/40 text-poster-blue px-8 py-3.5 rounded-2xl text-lg font-bold text-center transition whitespace-nowrap">
-                    Poznaj historię
-                </a>
-            </div>
-        </div>
+        
+        <p class="hero-subtitle text-poster-blue text-xs md:text-base font-bold tracking-widest max-w-sm md:max-w-md mt-8 uppercase bg-white/40 backdrop-blur-sm px-6 py-2 rounded-full border border-white/20 shadow-sm text-center">
+            Gra terenowa w Parku Pszczyńskim
+        </p>
     </header>
+
+    <div class="w-full max-w-xl mx-auto px-4 mb-16 relative z-20">
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+            <a href="#zapisy" class="bg-poster-green text-white px-10 py-4 rounded-2xl text-lg font-bold text-center transition shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 whitespace-nowrap">
+                Zapisz się
+            </a>
+            <a href="#zasady" class="bg-white/80 hover:bg-white border-2 border-sky-200/60 text-poster-blue px-10 py-4 rounded-2xl text-lg font-bold text-center transition shadow-md hover:shadow-lg transform hover:-translate-y-0.5 whitespace-nowrap">
+                Poznaj historię
+            </a>
+        </div>
+    </div>
 
     <main class="relative z-10 space-y-16 pb-24">
 
-        <section id="zasady" class="py-16 px-4 max-w-3xl mx-auto text-center">
+        <section id="zasady" class="py-8 px-4 max-w-3xl mx-auto text-center scroll-mt-32">
             <div class="paper-island p-8 md:p-12 rounded-3xl shadow-xl">
                 <h2 class="text-4xl mb-8 text-poster-blue font-black">Legenda Pierwszego Ogrodu</h2>
                 <div class="space-y-6 text-lg leading-relaxed text-slate-600">
-                    <p>Dawno temu istniało miejsce, gdzie wszystko było w idealnej równowadze. Wszystkie stworzenia i ludzie żyli w pełnej jedności – rozumieli się bez słów, a świat wokół nich mienił się kolorami, których dziś nie potrafimy nawet nazwać.</p>
-                    <p class="italic text-amber-600 font-semibold text-2xl my-6">"Jednak pewnego dnia, przez pychę i chęć bycia ważniejszymi od innych, ludzie zaczęli budować mury..."</p>
-                    <p>Harmonia zniknęła, a ogród stał się bezbarwny. Dziś odnaleźliśmy mapę, która prowadzi do utraconych barw. Czy odważysz się je odzyskać?</p>
+                    <p>Dawno temu istniało miejsce zwane Pierwszym Ogrodem, gdzie wszystko było w idealnej równowadze[cite: 217]. Wszystkie stworzenia i ludzie żyli w pełnej jedności – rozumieli się bez słów, a świat wokół nich mienił się kolorami, których dziś nie potrafimy nawet nazwać[cite: 218].</p>
+                    <p class="italic text-amber-600 font-semibold text-2xl my-6">"Jednak pewnego dnia, przez pychę i chęć bycia ważniejszymi od innych, ludzie zaczęli budować mury..." [cite: 219]</p>
+                    <p>Harmonii nie dało się utrzymać w izolacji – ogród zaczął tracić swoje barwy, aż stał się bezbarwny i podzielony na kawałki[cite: 220]. Dziś odnaleźliśmy mapę, która pokazuje, że Pierwszy Ogród wcale nie zniknął – on czeka na ponowne odkrycie[cite: 221]. Czy odważysz się przywrócić mu blask[cite: 223]?</p>
                 </div>
             </div>
         </section>
 
-        <section class="py-12 max-w-6xl mx-auto px-4">
+        <section class="py-4 max-w-6xl mx-auto px-4">
             <div class="grid md:grid-cols-3 gap-8 text-center">
                 <div class="bg-sky-950/95 backdrop-blur-sm p-8 rounded-3xl border border-sky-900 shadow-2xl text-white">
                     <div class="text-4xl mb-4">🤝</div>
                     <h3 class="text-2xl font-bold mb-2 text-sky-300">Współpraca</h3>
-                    <p class="text-sky-100/80 text-sm leading-relaxed">Tu nie ma rywalizacji. Wygrywacie tylko wtedy, gdy działacie jako jedna drużyna.</p>
+                    <p class="text-sky-100/80 text-sm leading-relaxed">Tu nie ma rywalizacji[cite: 227]. Wygrywacie tylko wtedy, gdy działacie jako jedna drużyna, łącząc siły ponad podziałami[cite: 214, 224].</p>
                 </div>
                 <div class="bg-sky-950/95 backdrop-blur-sm p-8 rounded-3xl border border-sky-900 shadow-2xl text-white">
                     <div class="text-4xl mb-4">🎨</div>
                     <h3 class="text-2xl font-bold mb-2 text-emerald-300">Pięć Barw</h3>
-                    <p class="text-sky-100/80 text-sm leading-relaxed">Odwiedź 5 stacji: od Echa Prawdy po Źródło Życia, by zebrać niezbędne kolory.</p>
+                    <p class="text-sky-100/80 text-sm leading-relaxed">Odwiedźcie 5 unikalnych stacji wyzwań, aby odzyskać i zabezpieczyć utracone kolory Ogrodu[cite: 223, 225].</p>
                 </div>
                 <div class="bg-sky-950/95 backdrop-blur-sm p-8 rounded-3xl border border-sky-900 shadow-2xl text-white">
                     <div class="text-4xl mb-4">🌳</div>
                     <h3 class="text-2xl font-bold mb-2 text-amber-300">Park Pszczyna</h3>
-                    <p class="text-sky-100/80 text-sm leading-relaxed">Odkryj uroki pszczyńskiego parku w zupełnie nowej, fabularnej odsłonie.</p>
+                    <p class="text-sky-100/80 text-sm leading-relaxed">Odkryjcie malownicze zakątki pszczyńskiego parku w zupełnie nowej, pełnej przygód odsłonie[cite: 210].</p>
                 </div>
             </div>
         </section>
 
-        <section id="mapa" class="py-12 px-4 max-w-5xl mx-auto">
+        <section id="mapa" class="py-4 px-4 max-w-5xl mx-auto scroll-mt-32">
             <h2 class="text-4xl mb-8 text-center text-poster-blue font-bold">Mapa Przygody</h2>
             <a href="https://earth.google.com/earth/d/17ndx8o6jrH7QCP_shXRFDf9hst6TQpIM?usp=sharing" target="_blank" class="group block relative bg-white rounded-3xl overflow-hidden shadow-2xl aspect-video border-4 border-white transition-transform duration-300 hover:scale-[1.005]">
                 <img src="./assets/placeholder-mapa.jpg" alt="Mapa gry terenowej" class="absolute inset-0 w-full h-full object-cover transition-opacity duration-300 group-hover:opacity-90">
@@ -136,10 +183,10 @@
             </a>
         </section>
 
-        <section id="zapisy" class="py-12 px-4 max-w-3xl mx-auto text-center">
+        <section id="zapisy" class="py-4 px-4 max-w-3xl mx-auto text-center scroll-mt-32">
             <div class="paper-island p-8 md:p-12 rounded-3xl shadow-xl">
                 <h2 class="text-4xl mb-6 text-poster-blue font-bold">Dołącz do gry!</h2>
-                <p class="mb-10 text-slate-600 font-medium">Zarejestruj swoją grupę lub rodzinę przez poniższy formularz, abyśmy mogli przygotować dla Was zestaw materiałów.</p>
+                <p class="mb-10 text-slate-600 font-medium">Zarejestruj swoją grupę lub rodzinę przez poniższy formularz, abyśmy mogli przygotować dla Was zestaw materiałów turniejowych.</p>
                 <a href="https://forms.gle/wf9QrTRQFHfXPvND9" target="_blank" class="inline-block bg-poster-green hover:shadow-emerald-700/20 text-white text-xl px-12 py-5 rounded-2xl shadow-xl transition transform hover:-translate-y-1 font-bold">
                     Otwórz Formularz Rejestracji
                 </a>
@@ -169,13 +216,15 @@
     <script>
         lucide.createIcons();
 
-        // Delikatne przesunięcie kredek w pionie w miarę scrollowania strony,
-        // dające subtelny efekt głębi (kredki poruszają się odrobinę inaczej niż tło papieru)
+        // Skrypt nasłuchuje przewijania strony:
+        // Jeśli użytkownik zjedzie w dół o więcej niż 60px, dodaje klasę '.scrolled',
+        // która zmniejsza logo wraz z kredkami i blokuje je na górze ekranu w estetyczny sposób.
         window.addEventListener('scroll', function() {
-            const pencils = document.getElementById('pencils');
-            if (pencils) {
-                const scrollValue = window.scrollY;
-                pencils.style.transform = `translateX(-50%) translateY(${scrollValue * 0.08}px)`;
+            const header = document.getElementById('hero-header');
+            if (window.scrollY > 60) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
             }
         });
     </script>
