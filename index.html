@@ -26,9 +26,25 @@
         .bg-poster-green { background-color: #89b443; }
         .bg-poster-green:hover { background-color: #769d37; }
 
-        /* Pusty bufor o wysokości ekranu startowego, żeby treść nie wchodziła pod logo */
+        /* KREDKI W TLE STRONY (pod wszystkimi elementami, z-index: 0) */
+        .pencils-bg-layer {
+            position: absolute;
+            top: 5%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 95vw;
+            max-width: 1100px;
+            height: auto;
+            object-fit: contain;
+            pointer-events: none;
+            z-index: 0; /* Całkowicie pod treścią */
+            opacity: 0.95;
+            will-change: transform;
+        }
+
+        /* Przestrzeń startowa dla dużego logo, żeby treść go nie zasłaniała */
         .hero-spacer {
-            height: 75vh;
+            height: 65vh;
             display: flex;
             flex-direction: column;
             justify-content: flex-end;
@@ -37,83 +53,78 @@
             pointer-events: none;
         }
 
-        /* Główny kontener nagłówka - zablokowany w oknie przeglądarki dla idealnej animacji */
-        .master-header {
+        /* GÓRNY PASEK Z BLUREM (Zablokowany na górze ekranu) */
+        .navigation-blur-bar {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
-            height: 75vh;
-            display: grid;
-            grid-template-areas: "stack";
-            justify-content: center;
-            align-items: center;
+            height: 0; /* Startuje niewidoczny */
+            background: rgba(253, 251, 247, 0.6); /* Delikatny odcień papieru */
+            backdrop-filter: blur(12px); /* Twój ulubiony efekt rozmycia */
+            -webkit-backdrop-filter: blur(12px);
             z-index: 40;
-            pointer-events: none;
-            transition: height 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+            transition: all 0.4s ease-in-out;
+            border-b: 1px solid rgba(16, 85, 122, 0);
         }
 
-        /* Gdy użytkownik przewinie stronę, cały nagłówek kurczy się do małego paska u góry */
-        .master-header.scrolled {
+        /* Aktywacja bluru po przewinięciu strony */
+        .navigation-blur-bar.active {
             height: 70px;
-            background: rgba(253, 251, 247, 0.15); /* Subtelne tło dopasowane do papieru */
-            backdrop-filter: blur(5px);
-            border-b: 1px solid rgba(16, 85, 122, 0.05);
+            border-b: 1px solid rgba(16, 85, 122, 0.08);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.02);
         }
 
-        /* KREDKI: Duże, plakatowe, idealnie wycentrowane na starcie */
-        .pencils-layer {
-            grid-area: stack;
-            width: 95vw;
-            max-width: 1100px;
-            height: auto;
-            object-fit: contain;
-            justify-self: center;
-            transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
-            opacity: 1;
-            transform: scale(1);
-            will-change: transform, opacity;
-        }
-
-        /* Po przewinięciu kredki zostają w tyle i delikatnie znikają, nie przeszkadzając w czytaniu */
-        .master-header.scrolled .pencils-layer {
-            opacity: 0.15;
-            transform: scale(0.8) translateY(-100px); /* Paralaksa: uciekają wyżej */
-        }
-
-        /* LOGO: Duże i czytelne na starcie */
+        /* GŁÓWNY LOGOTYP - Startuje wyśrodkowany w sekcji Hero */
         .logo-layer {
-            grid-area: stack;
+            position: absolute;
+            top: 20vh;
+            left: 50%;
+            transform: translateX(-50%) scale(1);
             width: 80vw;
-            max-width: 550px;
+            max-width: 500px;
             height: auto;
-            object-fit: contain;
-            justify-self: center;
+            z-index: 50; /* Zawsze nad blurem i treścią */
             transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
-            will-change: transform;
-            pointer-events: auto;
+            transform-origin: center center;
         }
 
-        /* Po przewinięciu: PŁYNNE ZMNIEJSZENIE i zablokowanie na górze (bez ucinania!) */
-        .master-header.scrolled .logo-layer {
-            width: 45vw;
-            max-width: 180px;
-            transform: translateY(0);
+        /* PO PRZEWINIĘCIU: Logo wędruje na górę paska z blurem i maleje */
+        .logo-layer.scrolled {
+            position: fixed;
+            top: 12px; /* Margines od góry paska */
+            width: 40vw;
+            max-width: 150px;
         }
 
-        /* Podpis pod logo */
+        /* Na komputerach przesuwamy małe logo do lewego górnego rogu, żeby nie zasłaniało środka ekranu */
+        @media (min-width: 768px) {
+            .logo-layer.scrolled {
+                left: 5%;
+                transform: translateX(0) scale(1); /* Reset centrowania na desktopie */
+            }
+        }
+        /* Na komórkach zostaje wycentrowane, ale malutkie na pasku */
+        @media (max-width: 767px) {
+            .logo-layer.scrolled {
+                left: 50%;
+                transform: translateX(-50%) scale(1);
+            }
+        }
+
         .hero-subtitle {
-            transition: all 0.4s ease;
-            opacity: 1;
+            transition: opacity 0.3s ease;
         }
-        .master-header.scrolled .hero-subtitle {
+        .hero-subtitle.hidden-sub {
             opacity: 0;
-            transform: translateY(-20px);
+            pointer-events: none;
         }
 
-        /* Wyspy tekstowe */
+        /* Wyspy tekstowe (z-index: 10, by być NAD kredkami) */
         .paper-island {
-            background-color: rgba(255, 255, 255, 0.78);
+            position: relative;
+            z-index: 10;
+            background-color: rgba(255, 255, 255, 0.82);
             backdrop-filter: blur(4px);
             border: 1px solid rgba(255, 255, 255, 0.6);
         }
@@ -121,21 +132,19 @@
 </head>
 <body class="text-slate-800 selection:bg-yellow-200">
 
-    <header class="master-header" id="main-header">
-        
-        <img src="./assets/pencils-layer.png" class="pencils-layer" alt="">
-        
-        <img src="./assets/logo-ogrod.png" alt="Pierwszy Ogród" class="logo-layer">
-        
-    </header>
+    <div class="navigation-blur-bar" id="blur-bar"></div>
+
+    <img src="./assets/logo-ogrod.png" id="main-logo" alt="Pierwszy Ogród" class="logo-layer">
+
+    <img src="./assets/pencils-layer.png" id="pencils-bg" class="pencils-bg-layer" alt="">
 
     <div class="hero-spacer">
-        <p class="hero-subtitle text-poster-blue text-xs md:text-base font-bold tracking-widest max-w-sm md:max-w-md uppercase bg-white/40 backdrop-blur-sm px-6 py-2 rounded-full border border-white/20 shadow-sm text-center relative z-50">
+        <p id="sub-title" class="hero-subtitle text-poster-blue text-xs md:text-base font-bold tracking-widest max-w-sm md:max-w-md uppercase bg-white/40 backdrop-blur-sm px-6 py-2 rounded-full border border-white/20 shadow-sm text-center relative z-20">
             Gra terenowa w Parku Pszczyńskim
         </p>
     </div>
 
-    <div class="w-full max-w-xl mx-auto px-4 mb-20 relative z-50">
+    <div class="w-full max-w-xl mx-auto px-4 mb-24 relative z-10">
         <div class="flex flex-col sm:flex-row gap-4 justify-center">
             <a href="#zapisy" class="bg-poster-green text-white px-10 py-4 rounded-2xl text-lg font-bold text-center transition shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 whitespace-nowrap">
                 Zapisz się
@@ -146,20 +155,20 @@
         </div>
     </div>
 
-    <main class="relative z-30 space-y-16 pb-24">
+    <main class="relative z-10 space-y-16 pb-24">
 
-        <section id="zasady" class="py-8 px-4 max-w-3xl mx-auto text-center scroll-mt-28">
+        <section id="zasady" class="py-8 px-4 max-w-3xl mx-auto text-center scroll-mt-24">
             <div class="paper-island p-8 md:p-12 rounded-3xl shadow-xl">
                 <h2 class="text-4xl mb-8 text-poster-blue font-black">Legenda Pierwszego Ogrodu</h2>
                 <div class="space-y-6 text-lg leading-relaxed text-slate-600">
-                    <p>Dawno temu istniało miejsce zwane Pierwszym Ogrodem, gdzie wszystko było w idealnej równowadze. Wszystkie stworzenia i ludzie żyli w pełnej jedności – rozumieli się bez słów, a świat wokół nich mienił się kolorami, których dziś nie potrafimy even nazwać.</p>
+                    <p>Dawno temu istniało miejsce zwane Pierwszym Ogrodem, gdzie wszystko było w idealnej równowadze. Wszystkie stworzenia i ludzie żyli w pełnej jedności – rozumieli się bez słów, a świat wokół nich mienił się kolorami, których dziś nie potrafimy nawet nazwać.</p>
                     <p class="italic text-amber-600 font-semibold text-2xl my-6">"Jednak pewnego dnia, przez pychę i chęć bycia ważniejszymi od innych, ludzie zaczęli budować mury..."</p>
                     <p>Harmonii nie dało się utrzymać w izolacji – ogród zaczął tracić swoje barwy, aż stał się bezbarwny i podzielony na kawałki. Dziś odnaleźliśmy mapę, która pokazuje, że Pierwszy Ogród wcale nie zniknął – on czeka na ponowne odkrycie. Czy odważysz się przywrócić mu blask?</p>
                 </div>
             </div>
         </section>
 
-        <section class="py-4 max-w-6xl mx-auto px-4">
+        <section class="py-4 max-w-6xl mx-auto px-4 relative z-20">
             <div class="grid md:grid-cols-3 gap-8 text-center">
                 <div class="bg-sky-950/95 backdrop-blur-sm p-8 rounded-3xl border border-sky-900 shadow-2xl text-white">
                     <div class="text-4xl mb-4">🤝</div>
@@ -179,7 +188,7 @@
             </div>
         </section>
 
-        <section id="mapa" class="py-4 px-4 max-w-5xl mx-auto scroll-mt-28">
+        <section id="mapa" class="py-4 px-4 max-w-5xl mx-auto scroll-mt-24">
             <h2 class="text-4xl mb-8 text-center text-poster-blue font-bold">Mapa Przygody</h2>
             <a href="https://earth.google.com/earth/d/17ndx8o6jrH7QCP_shXRFDf9hst6TQpIM?usp=sharing" target="_blank" class="group block relative bg-white rounded-3xl overflow-hidden shadow-2xl aspect-video border-4 border-white transition-transform duration-300 hover:scale-[1.005]">
                 <img src="./assets/placeholder-mapa.jpg" alt="Mapa gry terenowej" class="absolute inset-0 w-full h-full object-cover transition-opacity duration-300 group-hover:opacity-90">
@@ -193,7 +202,7 @@
             </a>
         </section>
 
-        <section id="zapisy" class="py-4 px-4 max-w-3xl mx-auto text-center scroll-mt-28">
+        <section id="zapisy" class="py-4 px-4 max-w-3xl mx-auto text-center scroll-mt-24">
             <div class="paper-island p-8 md:p-12 rounded-3xl shadow-xl">
                 <h2 class="text-4xl mb-6 text-poster-blue font-bold">Dołącz do gry!</h2>
                 <p class="mb-10 text-slate-600 font-medium">Zarejestruj swoją grupę lub rodzinę przez poniższy formularz, abyśmy mogli przygotować dla Was zestaw materiałów turniejowych.</p>
@@ -226,14 +235,30 @@
     <script>
         lucide.createIcons();
 
-        const header = document.getElementById('main-header');
+        const logo = document.getElementById('main-logo');
+        const blurBar = document.getElementById('blur-bar');
+        const subtitle = document.getElementById('sub-title');
+        const pencilsBg = document.getElementById('pencils-bg');
 
         window.addEventListener('scroll', function() {
-            // Próg aktywacji zmiany skali to 80px przewinięcia ekranu
-            if (window.scrollY > 80) {
-                header.classList.add('scrolled');
+            const scrollValue = window.scrollY;
+            
+            // 1. Zmiana trybu logo i aktywacja paska z blurem (po przewinięciu o 120px)
+            if (scrollValue > 120) {
+                logo.classList.add('scrolled');
+                blurBar.classList.add('active');
+                subtitle.classList.add('hidden-sub');
             } else {
-                header.classList.remove('scrolled');
+                logo.classList.remove('scrolled');
+                blurBar.classList.remove('active');
+                subtitle.classList.remove('hidden-sub');
+            }
+
+            // 2. Paralaksa kredek w tle
+            // Kredki przesuwają się powoli w dół (współczynnik 0.2), 
+            // dzięki czemu tekst na wyspach przesuwa się nad nimi szybciej.
+            if (pencilsBg) {
+                pencilsBg.style.transform = `translateX(-50%) translateY(${scrollValue * 0.2}px)`;
             }
         });
     </script>
