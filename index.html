@@ -18,7 +18,7 @@
             font-family: 'Inter', sans-serif;
             background: url("./assets/paper-bg.jpg") no-repeat center center fixed; 
             background-size: cover;
-            overflow-x: hidden;
+            overflow-x: hidden; /* Blokuje poziomy scroll, gdy kredki wystają za ekran */
         }
         h2, h3 { font-family: 'Playfair Display', serif; }
 
@@ -26,23 +26,26 @@
         .bg-poster-green { background-color: #89b443; }
         .bg-poster-green:hover { background-color: #769d37; }
 
-        /* KREDKI STALE W TLE (Fixed + Parallax) */
+        /* KREDKI W TLE (Wychodzą poza ekran na mobile, większe na desktopie) */
         .pencils-bg-fixed {
             position: fixed;
-            top: 6%;
+            top: 4vh;
             left: 50%;
             transform: translateX(-50%);
             width: 95vw;
-            max-width: 1100px;
+            /* Na komórkach kredki MUSZĄ być szersze niż ekran i z niego uciekać */
+            min-width: 680px; 
+            /* Na komputerach pozwalamy im rozwinąć skrzydła do 1400px */
+            max-width: 1400px; 
             height: auto;
             object-fit: contain;
             pointer-events: none;
-            z-index: 0; /* Pod całą treścią strony */
+            z-index: 0;
             opacity: 0.95;
             will-change: transform;
         }
 
-        /* Przestrzeń startowa dla zachowania proporcji plakatu na wejściu */
+        /* Przestrzeń startowa */
         .hero-spacer {
             height: 65vh;
             display: flex;
@@ -53,23 +56,22 @@
             pointer-events: none;
         }
 
-        /* DELIKATNY BLUR NA GÓRZE (Płynna poświata bez odcinającej się belki) */
+        /* DELIKATNY BLUR NA GÓRZE */
         .navigation-blur-bar {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 0;
-            background: linear-gradient(to bottom, rgba(253, 251, 247, 0.4) 0%, rgba(253, 251, 247, 0) 100%);
+            background: linear-gradient(to bottom, rgba(253, 251, 247, 0.45) 0%, rgba(253, 251, 247, 0) 100%);
             backdrop-filter: blur(0px);
             -webkit-backdrop-filter: blur(0px);
             z-index: 40;
             transition: all 0.4s ease-in-out;
         }
 
-        /* Subtelna aktywacja rozmycia przy scrollu */
         .navigation-blur-bar.active {
-            height: 85px; /* Delikatny gradient przechodzący w przezroczystość */
+            height: 85px; 
             backdrop-filter: blur(8px);
             -webkit-backdrop-filter: blur(8px);
         }
@@ -77,18 +79,18 @@
         /* LOGOTYP */
         .logo-layer {
             position: absolute;
-            top: 20vh;
+            top: 22vh;
             left: 50%;
             transform: translateX(-50%) scale(1);
-            width: 80vw;
-            max-width: 500px;
+            width: 85vw;
+            max-width: 520px;
             height: auto;
-            z-index: 50; /* Zawsze nad tekstem i blurem */
+            z-index: 50;
             transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
             transform-origin: center center;
         }
 
-        /* Po przewinięciu: Płynne dopasowanie do paska z blurem na górze */
+        /* Po przewinięciu: Płynne dopasowanie do paska z blurem */
         .logo-layer.scrolled {
             position: fixed;
             top: 15px;
@@ -96,14 +98,16 @@
             max-width: 135px;
         }
 
-        /* Na desktopie ucieka do lewego rogu */
         @media (min-width: 768px) {
             .logo-layer.scrolled {
                 left: 5%;
                 transform: translateX(0);
             }
+            .pencils-bg-fixed {
+                top: 2vh; /* Na desktopie delikatnie wyżej */
+            }
         }
-        /* Na komórce zostaje małe na środku górnego bluru */
+        
         @media (max-width: 767px) {
             .logo-layer.scrolled {
                 left: 50%;
@@ -119,7 +123,7 @@
             pointer-events: none;
         }
 
-        /* Wyspy tekstowe na papierze (z-index: 10, by płynąć NAD kredkami) */
+        /* Wyspy tekstowe na papierze */
         .paper-island {
             position: relative;
             z-index: 10;
@@ -242,7 +246,6 @@
         window.addEventListener('scroll', function() {
             const scrollValue = window.scrollY;
             
-            // 1. Przełączanie logo do trybu pływającego (po przewinięciu o 100px)
             if (scrollValue > 100) {
                 logo.classList.add('scrolled');
                 blurBar.classList.add('active');
@@ -253,8 +256,6 @@
                 subtitle.classList.remove('hidden-sub');
             }
 
-            // 2. Efekt paralaksy dla kredek, które są stale obecne w tle (fixed)
-            // Kredki przesuwają się odrobinę wolniej niż przewijana treść, dając poczucie przestrzeni pod tekstem.
             if (pencilsBg) {
                 pencilsBg.style.transform = `translateX(-50%) translateY(${scrollValue * 0.12}px)`;
             }
