@@ -341,10 +341,11 @@
             transition: opacity 0.5s ease, transform 0.5s ease, visibility 0.5s;
         }
 
+        /* Stan aktywny z zachowaniem środka */
         .story-step-data.active {
             opacity: 1;
             visibility: visible;
-            transform: translateY(0);
+            transform: translate(-50%, -50%) translateY(0);
         }
 
         /* Gwarancja dobrych proporcji dla grafik liniowych */
@@ -354,34 +355,38 @@
             filter: drop-shadow(0 4px 12px rgba(0,0,0,0.1));
         }
 
-        /* Nowy kontener, który tworzy naturalną parę na desktopie i chroni przed rozjeżdżaniem */
+        /* Kontener barierowy - teraz dopasowuje się pod nagłówkiem dzięki flex-grow */
         .story-content-boundary {
-            position: absolute;
-            inset: 0;
-            display: flex;
-            flex-direction: column;
+            position: relative; /* Zmienione z absolute na relative! */
             width: 100%;
-            max-width: 1152px; /* Odpowiednik max-w-6xl w Tailwindzie */
+            max-width: 1152px; /* max-w-6xl */
             margin: 0 auto;
-            border-top: 10px solid transparent; /* Techniczna blokada - treść nie wejdzie wyżej */
-            padding: 10px 24px 40px 24px;
+            flex-grow: 1; /* Automatycznie zajmie całą resztę ekranu PONIŻEJ tytułu */
+            padding: 0 24px 40px 24px;
             box-sizing: border-box;
             z-index: 20;
-        }
-        
-        /* Wewnętrzny wrapper pomagający kontrolować przestrzeń */
-        .story-content-wrapper {
             display: flex;
             flex-direction: column;
-            flex-grow: 1;
-            justify-content: space-around;
-            gap: 20px;
         }
         
-        /* Nadpisanie pozycji kroków, by układały się idealnie wewnątrz boundary */
+        /* Wewnętrzny wrapper trzymający bezpieczną wysokość */
+        .story-content-wrapper {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            flex-grow: 1;
+        }
+        
+        /* Slajdy - pozycjonowane absolutnie, ale TYLKO wewnątrz wolnej przestrzeni wrappera */
         .story-step-data {
             position: absolute;
-            inset: 0;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -40%) translateY(20px); /* Wyśrodkowanie w wolnej strefie */
+            width: 100%;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.5s ease, transform 0.5s ease, visibility 0.5s;
             padding: 10px;
         }
     </style>
@@ -460,95 +465,99 @@
             </section>
     
           <section id="zasady" class="story-container scroll-mt-24">
-                                                                    
-                <div class="story-sticky-screen" id="story-screen">
-                    
-                    <h2 class="text-3xl md:text-5xl text-center font-bold tracking-wide mb-8 w-full text-white drop-shadow-sm transition-opacity duration-500 pt-8" id="scrollytelling-title">
-                        Legenda Pierwszego Ogrodu
-                    </h2>
-            
-                    <div class="story-content-boundary">
-                        <div class="story-content-wrapper pt-16 md:pt-10">
-                            
-                            <div class="story-step-data active md:grid md:grid-cols-2 md:gap-12 md:items-center" data-step="0">
-                                <div class="flex justify-center order-1 md:order-2 mb-4 md:mb-0">
-                                    <img src="./assets/story_1.png" alt="" class="story-img w-full max-w-[180px] md:max-w-[622px]">
-                                </div>
-                                <div class="text-center md:text-left order-2 md:order-1 px-4 md:px-0">
-                                    <p class="text-sm md:text-xl leading-relaxed font-light">
-                                        Dawno temu istniało miejsce zwane Pierwszym Ogrodem, gdzie wszystko było w idealnej równowadze. 
-                                    </p>
-                                    <p class="text-sm md:text-xl leading-relaxed font-light mt-4">
-                                        Wszystkie stworzenia i ludzie żyli w pełnej jedności – rozumieli się bez słów, a world wokół nich mienił się kolorami, których dziś nie potrafimy nawet nazwać.
-                                    </p>
-                                </div>
+    
+            <div class="story-sticky-screen flex flex-col pt-6" id="story-screen">
+
+            <div id="story-progress-bar" class="fixed bottom-0 left-0 h-2 bg-white z-[60] opacity-0 transition-opacity duration-300 pointer-events-none shadow-sm" style="width: 0%;"></div>
+                
+                <h2 class="text-3xl md:text-5xl text-center font-bold tracking-wide w-full text-white drop-shadow-sm transition-opacity duration-500 min-h-[60px] flex items-center justify-center" id="scrollytelling-title">
+                    Legenda Pierwszego Ogrodu
+                </h2>
+        
+                <div class="story-content-boundary">
+                    <div class="story-content-wrapper">
+                        
+                        <div class="story-step-data active md:grid md:grid-cols-2 md:gap-12 md:items-center" data-step="0">
+                            <div class="flex justify-center order-1 md:order-2 mb-4 md:mb-0">
+                                <img src="./assets/story_1.png" alt="" class="story-img w-full max-w-[180px] md:max-w-[622px]">
                             </div>
-            
-                            <div class="story-step-data md:grid md:grid-cols-2 md:gap-12 md:items-center" data-step="1">
-                                <div class="flex justify-center order-1 md:order-2 mb-4 md:mb-0">
-                                    <img src="./assets/story_2.png" alt="" class="story-img w-full max-w-[180px] md:max-w-[622px]">
-                                </div>
-                                <div class="text-center md:text-left order-2 md:order-1 px-4 md:px-0">
-                                    <p class="text-sm md:text-xl leading-relaxed font-light">
-                                        Jednak pewnego dnia, przez pychę i chęć bycia ważniejszymi od innych, ludzie zaczęli budować mury między sobą.
-                                    </p>
-                                    <p class="text-sm md:text-xl leading-relaxed font-light mt-4">
-                                        Harmonii nie dało się utrzymać w izolacji – ogród zaczął tracić swoje barwy, aż stał się bezbarwny i podzielony na kawałki.
-                                    </p>
-                                </div>
+                            <div class="text-center md:text-left order-2 md:order-1 px-4 md:px-0">
+                                <p class="text-sm md:text-xl leading-relaxed font-light">
+                                    Dawno temu istniało miejsce zwane Pierwszym Ogrodem, gdzie wszystko było w idealnej równowadze. 
+                                </p>
+                                <p class="text-sm md:text-xl leading-relaxed font-light mt-4">
+                                    Wszystkie stworzenia i ludzie żyli w pełnej jedności – rozumieli się bez słów, a świat wokół nich mienił się kolorami, których dziś nie potrafimy nawet nazwać.
+                                </p>
                             </div>
-            
-                            <div class="story-step-data md:grid md:grid-cols-2 md:gap-12 md:items-center" data-step="2">
-                                <div class="flex justify-center order-1 md:order-2 mb-4 md:mb-0">
-                                    <img src="./assets/story_3.png" alt="" class="story-img w-full max-w-[180px] md:max-w-[622px]">
-                                </div>
-                                <div class="text-center md:text-left order-2 md:order-1 px-4 md:px-0">
-                                    <p class="text-sm md:text-xl leading-relaxed font-light">
-                                        Dziś odnaleźliśmy mapę, która pokazuje, że Pierwszy Ogród wcale nie zniknął – on jest <span class="font-bold italic">"uśpiony"</span> pod powierzchnią naszej codzienności.
-                                    </p>
-                                    <p class="text-sm md:text-xl leading-relaxed font-light mt-4">
-                                        Każdy podział, każde "ja" zamiast "my", sprawia, że szarość staje się głębsza.
-                                    </p>
-                                </div>
-                            </div>
-            
-                            <div class="story-step-data md:grid md:grid-cols-2 md:gap-12 md:items-center" data-step="3">
-                                <div class="flex justify-center order-1 md:order-2 mb-4 md:mb-0">
-                                    <img src="./assets/story_4.png" alt="" class="story-img w-full max-w-[140px] md:max-w-[622px]">
-                                </div>
-                                <div class="text-center md:text-left order-2 md:order-1 px-4 md:px-0">
-                                    <p class="text-sm md:text-xl leading-relaxed font-light md:mb-4">
-                                        Waszym zadaniem jest odnalezienie utraconych kolorów i przywrócenie Pierwszemu Ogrodowi dawnej świetności.
-                                    </p>
-                                    <p class="text-sm md:text-xl leading-relaxed font-light mt-2 md:mt-0">
-                                        Aby to zrobić, będziecie musieli działać <span class="font-bold tracking-wider">RAZEM</span>. Tylko prawdziwa jedność i współpraca może przywrócić dawny porządek. Przed wami 5 stacji, na których znajdziecie utracone kolory.
-                                    </p>
-                                </div>
-                            </div>
-            
-                            <div class="story-step-data md:grid md:grid-cols-2 md:gap-12 md:items-center" data-step="4">
-                                <div class="flex justify-center order-1 md:order-2 mb-4 md:mb-0">
-                                    <img src="./assets/story_5.png" alt="" class="story-img w-full max-w-[200px] md:max-w-[825px]">
-                                </div>
-                                <div class="text-center md:text-left order-2 md:order-1 px-4 md:px-0">
-                                    <p class="text-sm md:text-xl leading-relaxed font-light md:mb-4">
-                                        Na szóstej, finałowej stacji czeka na was Pierwszy Ogród - razem z innymi grupami przywrócicie go do życia!
-                                    </p>
-                                    <p class="text-sm md:text-xl leading-relaxed font-semibold mt-2 md:mt-0 text-yellow-200">
-                                        Nie szukamy zwycięzców, szukamy tych, którzy potrafią budować razem. Czy jesteście gotowi przywrócić światu jego kolory? Ruszajcie!
-                                    </p>
-                                </div>
-                            </div>
-            
                         </div>
+        
+                        <div class="story-step-data md:grid md:grid-cols-2 md:gap-12 md:items-center" data-step="1">
+                            <div class="flex justify-center order-1 md:order-2 mb-4 md:mb-0">
+                                <img src="./assets/story_2.png" alt="" class="story-img w-full max-w-[180px] md:max-w-[622px]">
+                            </div>
+                            <div class="text-center md:text-left order-2 md:order-1 px-4 md:px-0">
+                                <p class="text-sm md:text-xl leading-relaxed font-light">
+                                    Jednak pewnego dnia, przez pychę i chęć bycia ważniejszymi od innych, ludzie zaczęli budować mury między sobą.
+                                </p>
+                                <p class="text-sm md:text-xl leading-relaxed font-light mt-4">
+                                    Harmonii nie dało się utrzymać w izolacji – ogród zaczął tracić swoje barwy, aż stał się bezbarwny i podzielony na kawałki.
+                                </p>
+                            </div>
+                        </div>
+        
+                        <div class="story-step-data md:grid md:grid-cols-2 md:gap-12 md:items-center" data-step="2">
+                            <div class="flex justify-center order-1 md:order-2 mb-4 md:mb-0">
+                                <img src="./assets/story_3.png" alt="" class="story-img w-full max-w-[180px] md:max-w-[622px]">
+                            </div>
+                            <div class="text-center md:text-left order-2 md:order-1 px-4 md:px-0">
+                                <p class="text-sm md:text-xl leading-relaxed font-light">
+                                    Dziś odnaleźliśmy mapę, która pokazuje, że Pierwszy Ogród wcale nie zniknął – on jest <span class="font-bold italic">"uśpiony"</span> pod powierzchnią naszej codzienności.
+                                </p>
+                                <p class="text-sm md:text-xl leading-relaxed font-light mt-4">
+                                    Każdy podział, każde "ja" zamiast "my", sprawia, że szarość staje się głębsza.
+                                </p>
+                            </div>
+                        </div>
+        
+                        <div class="story-step-data md:grid md:grid-cols-2 md:gap-12 md:items-center" data-step="3">
+                            <div class="flex justify-center order-1 md:order-2 mb-4 md:mb-0">
+                                <img src="./assets/story_4.png" alt="" class="story-img w-full max-w-[140px] md:max-w-[622px]">
+                            </div>
+                            <div class="text-center md:text-left order-2 md:order-1 px-4 md:px-0">
+                                <p class="text-sm md:text-xl leading-relaxed font-light md:mb-4">
+                                    Waszym zadaniem jest odnalezienie utraconych kolorów i przywrócenie Pierwszemu Ogrodowi dawnej świetności.
+                                </p>
+                                <p class="text-sm md:text-xl leading-relaxed font-light mt-2 md:mt-0">
+                                    Aby to zrobić, będziecie musieli działać <span class="font-bold tracking-wider">RAZEM</span>. Tylko prawdziwa jedność i współpraca może przywrócić dawny porządek. Przed wami 5 stacji, na których znajdziecie utracone kolory.
+                                </p>
+                            </div>
+                        </div>
+        
+                        <div class="story-step-data md:grid md:grid-cols-2 md:gap-12 md:items-center" data-step="4">
+                            <div class="flex justify-center order-1 md:order-2 mb-4 md:mb-0">
+                                <img src="./assets/story_5.png" alt="" class="story-img w-full max-w-[180px] md:max-w-[825px]">
+                            </div>
+                            <div class="text-center md:text-left order-2 md:order-1 px-4 md:px-0">
+                                <p class="text-sm md:text-xl leading-relaxed font-light md:mb-4">
+                                    Na szóstej, finałowej stacji czeka na was Pierwszy Ogród - razem z innymi grupami przywrócicie go do życia!
+                                </p>
+                                <p class="text-sm md:text-xl leading-relaxed font-semibold mt-2 md:mt-0 text-yellow-200">
+                                    Nie szukamy zwycięzców, szukamy tych, którzy potrafią budować razem. Czy jesteście gotowi przywrócić światu jego kolory? Ruszajcie!
+                                </p>
+                            </div>
+                        </div>
+        
                     </div>
                 </div>
-            
-                <div class="story-trigger" id="trigger-0"></div>
-                <div class="story-trigger" id="trigger-1"></div>
-                <div class="story-trigger" id="trigger-2"></div>
-                <div class="story-trigger" id="trigger-3"></div>
-                <div class="story-trigger" id="trigger-4"></div>
+            </div>
+        
+            <div class="story-trigger" id="trigger-0"></div>
+            <div class="story-trigger" id="trigger-1"></div>
+            <div class="story-trigger" id="trigger-2"></div>
+            <div class="story-trigger" id="trigger-3"></div>
+            <div class="story-trigger" id="trigger-4"></div>
+        
+        </section>
     
         </section>
 
