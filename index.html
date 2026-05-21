@@ -311,19 +311,6 @@
             pointer-events: none;
         }
 
-        /* Blok na treść: tytuł, opis i obrazek */
-        .story-content-wrapper {
-            position: absolute;
-            inset: 0;
-            display: flex;
-            flex-direction: column;
-            width: 100%;
-            max-w: 1200px;
-            margin: 0 auto;
-            padding: 80px 24px 40px 24px;
-            box-sizing: border-box;
-        }
-
         /* Animacja płynnego pojawiania się elementów opowieści */
         .story-step-data {
             position: absolute;
@@ -681,6 +668,12 @@
             
             // Wyliczamy procent (od 0 do 100)
             let progress = (scrollPastTop / totalScrollable) * 100;
+
+            if (rect.top <= 0 && rect.bottom >= window.innerHeight) {
+                progressBar.style.opacity = '1'; // Pokaż pasek, gdy jesteśmy w sekcji legendy
+            } else {
+                progressBar.style.opacity = '0'; // Ukryj poza nią
+            }
             
             // Zabezpieczenie, żeby pasek nie wyjechał poniżej 0% ani powyżej 100%
             progress = Math.max(0, Math.min(100, progress));
