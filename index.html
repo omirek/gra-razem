@@ -431,6 +431,8 @@
       <section id="zasady" class="story-container">
             
             <div class="story-sticky-screen" id="story-screen">
+
+                <div id="story-progress-bar" class="absolute top-0 left-0 h-1.5 bg-white/80 backdrop-blur-sm z-50 transition-none" style="width: 0%;"></div>
                 
                 <div class="story-content-wrapper">
                     <h2 class="text-3xl md:text-5xl text-center font-bold tracking-wide mb-4 w-full text-white drop-shadow-sm">
@@ -573,6 +575,8 @@
     const storyScreen = document.getElementById('story-screen');
     const storySteps = document.querySelectorAll('.story-step-data');
     const storyTriggers = document.querySelectorAll('.story-trigger');
+    const storyContainer = document.querySelector('.story-container');
+    const progressBar = document.getElementById('story-progress-bar');
     
     // Twoja paleta kolorów przypisana do kroków od 1 do 5
     const stepColors = ['#4e539d', '#eb6562', '#fab800', '#9ac9db', '#a8d4b8'];
@@ -614,6 +618,26 @@
                     step.classList.remove('active');
                 }
             });
+        }
+
+        // NOWOŚĆ: Obliczanie i animowanie paska postępu
+        if (storyContainer && progressBar) {
+            const rect = storyContainer.getBoundingClientRect();
+            
+            // Ile pikseli sekcji "przejechało" już za górną krawędź ekranu
+            const scrollPastTop = -rect.top; 
+            
+            // Całkowita przestrzeń, po której możemy skrolować (wysokość sekcji minus wysokość ekranu)
+            const totalScrollable = rect.height - window.innerHeight;
+            
+            // Wyliczamy procent (od 0 do 100)
+            let progress = (scrollPastTop / totalScrollable) * 100;
+            
+            // Zabezpieczenie, żeby pasek nie wyjechał poniżej 0% ani powyżej 100%
+            progress = Math.max(0, Math.min(100, progress));
+            
+            // Aktualizacja szerokości paska na żywo
+            progressBar.style.width = progress + '%';
         }
     });
 </script>
