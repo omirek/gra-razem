@@ -393,6 +393,8 @@
 </head>
 <body class="text-slate-800 selection:bg-yellow-200">
 
+    <div id="story-progress-bar" class="fixed bottom-0 left-0 h-2 bg-white z-[60] opacity-0 transition-opacity duration-300 pointer-events-none shadow-sm" style="width: 0%;"></div>
+
     <div class="navigation-blur-bar" id="blur-bar"></div>
 
     <img src="./assets/logo-ogrod.png" id="main-logo" alt="Pierwszy Ogród" class="logo-layer">
@@ -467,7 +469,6 @@
           <section id="zasady" class="story-container scroll-mt-24">
     
             <div class="story-sticky-screen flex flex-col pt-6" id="story-screen">
-            <div id="story-progress-bar" class="fixed bottom-0 left-0 h-2 bg-white z-[60] opacity-0 transition-opacity duration-300 pointer-events-none shadow-sm" style="width: 0%;"></div>
                 
                 <h2 class="text-3xl md:text-5xl text-center font-bold tracking-wide w-full text-white drop-shadow-sm transition-opacity duration-500 min-h-[60px] flex items-center justify-center" id="scrollytelling-title">
                     Legenda Pierwszego Ogrodu
