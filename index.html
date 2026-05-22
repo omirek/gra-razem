@@ -113,6 +113,7 @@
             animation: none;
             /* DODAJEMY TO: Gwarantuje płynne przejście bez szarpnięć przy wyłączaniu animacji */
             transition-property: all; 
+            cursor: pointer;
         }
 
         @keyframes pulse-slow {
@@ -702,6 +703,19 @@
             progressBar.style.width = progress + '%';
         }
     });
+
+        // Nasłuchiwanie kliknięcia w logo
+        logo.addEventListener('click', function() {
+            const scrollValue = window.scrollY;
+            
+            // Reagujemy na kliknięcie TYLKO wtedy, gdy strona jest przewinięta w dół
+            if (scrollValue > 100) {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth' // Płynne przewijanie do góry zamiast nagłego skoku
+                });
+            }
+        });
 </script>
 </body>
 </html>
