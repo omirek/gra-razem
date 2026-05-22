@@ -385,6 +385,12 @@
 
     <div class="navigation-blur-bar" id="blur-bar"></div>
 
+    <div id="story-counter" class="hidden md:flex fixed top-8 left-1/2 -translate-x-1/2 z-50 pointer-events-none transition-opacity duration-300 opacity-0">
+        <span class="text-lg font-bold tracking-widest text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.5)] uppercase">
+            01 / 05
+        </span>
+    </div>
+
     <img src="./assets/logo-ogrod.png" id="main-logo" alt="Pierwszy Ogród" class="logo-layer">
 
     <img src="./assets/pencils-layer.png" class="pencils-bg-fixed" alt="">
@@ -471,11 +477,7 @@
                     <div class="story-content-wrapper">
                         
                         <div class="story-step-data active md:grid md:grid-cols-2 md:gap-12 md:items-center" data-step="0">
-                            <div class="hidden md:flex md:col-span-2 justify-center mb-6">
-                                <span class="text-xs font-bold tracking-widest text-slate-400 bg-white shadow-sm border border-slate-200/60 px-4 py-1 rounded-full">
-                                    01 / 05
-                                </span>
-                            </div>
+                        
                             <div class="flex justify-center order-1 md:order-2 mb-4 md:mb-0">
                                 <img src="./assets/story_1.png" alt="" class="story-img w-full max-w-[280px] sm:max-w-[320px] md:max-w-[622px]">
                             </div>
@@ -490,10 +492,7 @@
                         </div>
         
                         <div class="story-step-data md:grid md:grid-cols-2 md:gap-12 md:items-center" data-step="1">
-                            <div class="hidden md:flex md:col-span-2 justify-center mb-6">
-                                <span class="text-xs font-bold tracking-widest text-slate-400 bg-white shadow-sm border border-slate-200/60 px-4 py-1 rounded-full">
-                                    02 / 05
-                                </span>
+                        
                             </div>
                             <div class="flex justify-center order-1 md:order-2 mb-4 md:mb-0">
                                 <img src="./assets/story_2.png" alt="" class="story-img w-full max-w-[280px] sm:max-w-[320px] md:max-w-[622px]">
@@ -509,11 +508,7 @@
                         </div>
         
                         <div class="story-step-data md:grid md:grid-cols-2 md:gap-12 md:items-center" data-step="2">
-                            <div class="hidden md:flex md:col-span-2 justify-center mb-6">
-                                <span class="text-xs font-bold tracking-widest text-slate-400 bg-white shadow-sm border border-slate-200/60 px-4 py-1 rounded-full">
-                                    03 / 05
-                                </span>
-                            </div>
+                        
                             <div class="flex justify-center order-1 md:order-2 mb-4 md:mb-0">
                                 <img src="./assets/story_3.png" alt="" class="story-img w-full max-w-[280px] sm:max-w-[320px] md:max-w-[622px]">
                             </div>
@@ -528,11 +523,7 @@
                         </div>
         
                         <div class="story-step-data md:grid md:grid-cols-2 md:gap-12 md:items-center" data-step="3">
-                            <div class="hidden md:flex md:col-span-2 justify-center mb-6">
-                                <span class="text-xs font-bold tracking-widest text-slate-400 bg-white shadow-sm border border-slate-200/60 px-4 py-1 rounded-full">
-                                    04 / 05
-                                </span>
-                            </div>
+                        
                             <div class="flex justify-center order-1 md:order-2 mb-4 md:mb-0">
                                 <img src="./assets/story_4.png" alt="" class="story-img w-full max-w-[280px] sm:max-w-[320px] md:max-w-[622px]">
                             </div>
@@ -547,11 +538,7 @@
                         </div>
         
                         <div class="story-step-data md:grid md:grid-cols-2 md:gap-12 md:items-center" data-step="4">
-                            <div class="hidden md:flex md:col-span-2 justify-center mb-6">
-                                <span class="text-xs font-bold tracking-widest text-slate-400 bg-white shadow-sm border border-slate-200/60 px-4 py-1 rounded-full">
-                                    05 / 05
-                                </span>
-                            </div>
+                        
                             <div class="flex justify-center order-1 md:order-2 mb-4 md:mb-0">
                                 <img src="./assets/story_5.png" alt="" class="story-img w-full max-w-[280px] sm:max-w-[320px] md:max-w-[825px]">
                             </div>
@@ -631,7 +618,7 @@
 
     </main>
 
-    <script>
+   <script>
     lucide.createIcons();
 
     const logo = document.getElementById('main-logo');
@@ -645,6 +632,10 @@
     const storyContainer = document.querySelector('.story-container');
     const progressBar = document.getElementById('story-progress-bar');
     const storyTitle = document.getElementById('scrollytelling-title');
+    
+    // NOWOŚĆ: Pobranie elementów stałego licznika HUD przypiętego u góry ekranu
+    const storyCounter = document.getElementById('story-counter');
+    const counterText = storyCounter ? storyCounter.querySelector('span') : null;
     
     // Twoja paleta kolorów przypisana do kroków od 1 do 5
     const stepColors = ['#4e539d', '#eb6562', '#fab800', '#9ac9db', '#a8d4b8'];
@@ -702,7 +693,7 @@
             });
         }
 
-        // NOWOŚĆ: Obliczanie i animowanie paska postępu
+        // NOWOŚĆ: Obliczanie paska postępu ORAZ sterowanie stałym licznikiem HUD
         if (storyContainer && progressBar) {
             const rect = storyContainer.getBoundingClientRect();
             
@@ -715,10 +706,22 @@
             // Wyliczamy procent (od 0 do 100)
             let progress = (scrollPastTop / totalScrollable) * 100;
 
+            // Sprawdzamy, czy użytkownik aktualnie ogląda sekcję legendy (jest wewnątrz jej kontenera)
             if (rect.top <= 0 && rect.bottom >= window.innerHeight) {
-                progressBar.style.opacity = '1'; // Pokaż pasek, gdy jesteśmy w sekcji legendy
+                progressBar.style.opacity = '1'; // Pokaż pasek postępu
+                
+                // DYNAMICZNE UKAZANIE I AKTUALIZACJA STAŁEGO LICZNIKA HUD
+                if (storyCounter && counterText) {
+                    storyCounter.classList.remove('opacity-0'); // Pokazuje biały napis na środku
+                    counterText.textContent = `0${currentStep + 1} / 05`; // Aktualizuje np. "01 / 05"
+                }
             } else {
-                progressBar.style.opacity = '0'; // Ukryj poza nią
+                progressBar.style.opacity = '0'; // Ukryj pasek postępu poza sekcją
+                
+                // UKRYCIE LICZNIKA HUD (gdy wyjedziemy nad lub pod legendę)
+                if (storyCounter) {
+                    storyCounter.classList.add('opacity-0');
+                }
             }
             
             // Zabezpieczenie, żeby pasek nie wyjechał poniżej 0% ani powyżej 100%
@@ -729,18 +732,18 @@
         }
     });
 
-        // Nasłuchiwanie kliknięcia w logo
-        logo.addEventListener('click', function() {
-            const scrollValue = window.scrollY;
-            
-            // Reagujemy na kliknięcie TYLKO wtedy, gdy strona jest przewinięta w dół
-            if (scrollValue > 100) {
-                window.scrollTo({
-                    top: 0,
-                    behavior: 'smooth' // Płynne przewijanie do góry zamiast nagłego skoku
-                });
-            }
-        });
+    // Nasłuchiwanie kliknięcia w logo
+    logo.addEventListener('click', function() {
+        const scrollValue = window.scrollY;
+        
+        // Reagujemy na kliknięcie TYLKO wtedy, gdy strona jest przewinięta w dół
+        if (scrollValue > 100) {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth' // Płynne przewijanie do góry zamiast nagłego skoku
+            });
+        }
+    });
 </script>
 </body>
 </html>
