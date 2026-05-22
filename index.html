@@ -377,6 +377,10 @@
             transition: opacity 0.5s ease, transform 0.5s ease, visibility 0.5s;
             padding: 10px;
         }
+
+        #story-counter span {
+            font-family: 'Playfair Display', Georgia, serif;
+        }
     </style>
 </head>
 <body class="text-slate-800 selection:bg-yellow-200">
@@ -385,8 +389,8 @@
 
     <div class="navigation-blur-bar" id="blur-bar"></div>
 
-    <div id="story-counter" class="hidden md:flex fixed top-8 left-1/2 -translate-x-1/2 z-50 pointer-events-none transition-opacity duration-300 opacity-0">
-        <span class="text-lg font-bold tracking-widest text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.5)] uppercase">
+    <div id="story-counter" class="hidden md:flex fixed top-16 left-1/2 -translate-x-1/2 z-50 pointer-events-none transition-opacity duration-300 opacity-0">
+        <span class="text-xl font-serif italic font-normal tracking-widest text-white drop-shadow-[0_2px_6px_rgba(0,0,0,0.4)]">
             01 / 05
         </span>
     </div>
